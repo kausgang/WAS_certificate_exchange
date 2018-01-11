@@ -1,11 +1,11 @@
 #!/bin/bash - 
 #===============================================================================
 #
-#          FILE: initial_cert.sh
+#          FILE: extract_cert.sh
 # 
-#         USAGE: ./initial_cert.sh 
+#         USAGE: ./extract_cert.sh 
 # 
-#   DESCRIPTION: 
+#   DESCRIPTION: extract the current certificate from was 
 # 
 #       OPTIONS: ---
 #  REQUIREMENTS: ---
@@ -13,7 +13,7 @@
 #         NOTES: ---
 #        AUTHOR: KAUSTAV GANGULI (), write.to.kaustav@gmail.com
 #  ORGANIZATION: self
-#       CREATED: 01/10/2018 04:00:58 PM
+#       CREATED: 01/11/2018 09:58:51 AM
 #      REVISION:  ---
 #===============================================================================
 
@@ -23,8 +23,12 @@ source conf.ini
 
 
 #-------------------------------------------------------------------------------
-# call wasadmin script with get_initial_cert.py
+# extract the certificate in $dmgr_root/etc
 #-------------------------------------------------------------------------------
-./src/was_script.sh $dmgr_root $username $password get_initial_cert.py
+./src/was_script.sh $dmgr_root $username $password extract_cert.py
 
 
+#-------------------------------------------------------------------------------
+#  move the certificate from $dmgr_root/etc to ./build
+#-------------------------------------------------------------------------------
+mv $dmgr_root/etc/cert*.arm ./build/

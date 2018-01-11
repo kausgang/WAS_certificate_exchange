@@ -1,9 +1,13 @@
 import time
 
-#print AdminTask.getCertificateChain('[-certificateAlias default -keyStoreName CellDefaultKeyStore -keyStoreScope (cell):localhostCell01 ]')
-
-#print AdminTask.help('getCertificate')
+#-------------------------------------------------------------------------------
+# get the cell certificate details
+#-------------------------------------------------------------------------------
 x= AdminTask.getCertificate('[-certificateAlias default -keyStoreName CellDefaultKeyStore]')
+
+#-------------------------------------------------------------------------------
+# find the expiry date
+#-------------------------------------------------------------------------------
 
 #find the valid from text
 start = x.find("Valid from",0,len(x))
@@ -11,9 +15,6 @@ start = x.find("Valid from",0,len(x))
 end = x.rfind(".",0,len(x))
 #slice the text & extract needed string
 y = x[start:end]
-
-print y
-
 
 #find the end date
 start = y.find("to",0,len(y))
@@ -25,7 +26,9 @@ final_date = end_date.replace(",","")
 #print final_date
 
 
-#print x
+#-------------------------------------------------------------------------------
+# get fingerprint value
+#-------------------------------------------------------------------------------
 start = x.find("fingerPrint",0,len(x))
 #print start
 y = x[start:len(x)]
@@ -37,11 +40,12 @@ z= x[start:end]
 
 start = z.find(" ",0,len(z))
 
-#print start
-#print z[start+1:len(z)]
 
 fingerprint = z[start+1:len(z)]
 
+#-------------------------------------------------------------------------------
+# write the content into ./build/existing_cert_details
+#-------------------------------------------------------------------------------
 f = open("build/existing_cert_details","w+")
 f.write("fingerprint=\"%s\"\nexpiry=\"%s\"" %(fingerprint,final_date))
 f.close()

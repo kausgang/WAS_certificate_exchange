@@ -19,27 +19,47 @@
 
 set -o nounset                              # Treat unset variables as an error
 
+
+#-------------------------------------------------------------------------------
+# get the previous $fingerprint vale
+#-------------------------------------------------------------------------------
 source ./build/existing_cert_details
+#-------------------------------------------------------------------------------
+# get details from configuration file
+#-------------------------------------------------------------------------------
 source conf.ini
 
+
+#-------------------------------------------------------------------------------
+# get the $current_fingerprint from WAS & save it in ./build/current_cert_details 
+#-------------------------------------------------------------------------------
 ./src/was_script.sh $dmgr_root $username $password get_current_cert.py
 
+
+
+#-------------------------------------------------------------------------------
+# get $current_fingerprint
+#-------------------------------------------------------------------------------
 source ./build/current_cert_details
 
-echo "$fingerprint"
-echo "$current_fingerprint"
-
-#tampering current_fingerprint to execute else condition
-#current_fingerprint=${current_fingerprint:2}
-
-echo "$current_fingerprint" 
-
+#-------------------------------------------------------------------------------
+# check if the current_fingerprint matches with the saved one
+#-------------------------------------------------------------------------------
 if [ "$fingerprint" = "$current_fingerprint" ];then
 	
 	echo match
 else 
-	echo no_match
+
+#-------------------------------------------------------------------------------
+# if the fingerprint doesn't match .. extract the certificate
+#-------------------------------------------------------------------------------
+#	echo no_match
+	./src/extract_cert.sh
 fi
 
+
+#-------------------------------------------------------------------------------
+# remove the temporary ./build/current_cert_details
+#-------------------------------------------------------------------------------
 rm ./build/current_cert_details
 
