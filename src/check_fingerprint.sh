@@ -30,7 +30,7 @@ echo "$fingerprint"
 echo "$current_fingerprint"
 
 #tampering current_fingerprint to execute else condition
-current_fingerprint=${current_fingerprint:2}
+#current_fingerprint=${current_fingerprint:2}
 
 echo "$current_fingerprint" 
 
