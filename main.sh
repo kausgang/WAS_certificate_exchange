@@ -20,7 +20,23 @@
 set -o nounset                              # Treat unset variables as an error
 
 
+#-------------------------------------------------------------------------------
+# check if conf.ini exists
+#-------------------------------------------------------------------------------
+if [ -f conf.ini ];then
+	
+	sed -i 's/ //g' conf.ini
+else
+	echo "conf.ini not found"
+	printf "create conf.ini file with these details, and in this format\nusername=<username>\npassword=<password>\ndmgr_root=<deployment manager profile location>\nJAVA_HOME=<jre root directory>\n"
+	exit 1
 
+fi
+
+#-------------------------------------------------------------------------------
+# clean conf.ini...remove spaces
+#-------------------------------------------------------------------------------
+sed -i 's/ //g' conf.ini
 
 #-------------------------------------------------------------------------------
 # source config file
@@ -37,16 +53,51 @@ if [ -z ${JAVA_HOME+x} ]; then
 	exit 1
 
 else
-	
 #-------------------------------------------------------------------------------
 # check java version..if >1.7 then continue; else exit
 #-------------------------------------------------------------------------------
-	version=$($JAVA_HOME/bin/java -version 2>&1 | sed -n ';s/.* version "\(.*\)\.\(.*\)\..*"/\1\2/p;')
+	if [ -f $JAVA_HOME/bin/java ];then
 	
-	if [ "$version" -le 16 ];then
-		echo "Please install Java 1.7 or newer" 
+		version=$($JAVA_HOME/bin/java -version 2>&1 | sed -n ';s/.* version "\(.*\)\.\(.*\)\..*"/\1\2/p;')
+        
+        	if [ "$version" -le 16 ];then
+                	echo "Please install Java 1.7 or newer" 
+                	exit 1
+        	fi
+	
+	else
+		echo "$JAVA_HOME/bin/java not found"
 		exit 1
+
 	fi
+
+fi
+
+
+#-------------------------------------------------------------------------------
+# check for $username & $password & $dmgr_root
+#-------------------------------------------------------------------------------
+
+if [ -z ${username+x} ]; then
+
+        echo "username is not set"
+	echo "add username=<user name for WAS> in conf.ini"
+        exit 1
+fi
+
+if [ -z ${password+x} ]; then
+
+        echo "password is not set"
+	echo "add password=<password for WAS> in conf.ini"
+        exit 1
+
+fi
+
+if [ -z ${dmgr_root+x} ]; then
+
+        echo "Deployment Manager location is not set is not set"
+	echo "add dmgr_root=<deploymentmanager profile location for WAS> in conf.ini"
+        exit 1
 
 fi
 
