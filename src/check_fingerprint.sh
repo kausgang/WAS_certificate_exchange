@@ -61,6 +61,11 @@ else
 # ENTER CODE TO IMPORT THE CERTIFICATE INTO KEYSTORE HERE
 #-------------------------------------------------------------------------------
 
+	#read keystore file location & keystore password by sourcing the conf.ini file
+	#backup keystore database file
+	#$JAVA_HOME/bin/keytool -importcert -trustcacerts -alias <ALIAS NAME WITH DATE STAMP> -file <EXPORTED CERT ARM FILE> -keystore <KEYSTORE FILE> -storepass <KEYSTORE PASSWORD>
+	#notify by mail
+
 
 fi
 
