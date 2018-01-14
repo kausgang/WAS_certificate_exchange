@@ -25,18 +25,21 @@ set -o nounset                              # Treat unset variables as an error
 #-------------------------------------------------------------------------------
 if [ -f conf.ini ];then
 	
+#-------------------------------------------------------------------------------
+# 	clean the conf file - remove spaces
+#-------------------------------------------------------------------------------
 	sed -i 's/ //g' conf.ini
 else
+
+#-------------------------------------------------------------------------------
+# 	print how to create conf file & exit the program
+#-------------------------------------------------------------------------------
 	echo "conf.ini not found"
 	printf "create conf.ini file with these details, and in this format\nusername=<username>\npassword=<password>\ndmgr_root=<deployment manager profile location>\nJAVA_HOME=<jre root directory>\n"
 	exit 1
 
 fi
 
-#-------------------------------------------------------------------------------
-# clean conf.ini...remove spaces
-#-------------------------------------------------------------------------------
-sed -i 's/ //g' conf.ini
 
 #-------------------------------------------------------------------------------
 # source config file
@@ -54,18 +57,28 @@ if [ -z ${JAVA_HOME+x} ]; then
 
 else
 #-------------------------------------------------------------------------------
-# check java version..if >1.7 then continue; else exit
+# check if java file is found (JAVA_HOME is correctly set) 
 #-------------------------------------------------------------------------------
 	if [ -f $JAVA_HOME/bin/java ];then
-	
+
+#-------------------------------------------------------------------------------
+# 		get version number in 2 digit format
+#-------------------------------------------------------------------------------
 		version=$($JAVA_HOME/bin/java -version 2>&1 | sed -n ';s/.* version "\(.*\)\.\(.*\)\..*"/\1\2/p;')
         
-        	if [ "$version" -le 16 ];then
-                	echo "Please install Java 1.7 or newer" 
-                	exit 1
-        	fi
+#-------------------------------------------------------------------------------
+# 			if java version is less that 1.7 exit the prog
+#-------------------------------------------------------------------------------
+	        	if [ "$version" -le 16 ];then
+        	        	echo "Please install Java 1.7 or newer" 
+                		exit 1
+        		fi
 	
 	else
+
+#-------------------------------------------------------------------------------
+# JAVA_HOME is not correctly set - exit the program
+#-------------------------------------------------------------------------------
 		echo "$JAVA_HOME/bin/java not found"
 		exit 1
 
@@ -107,9 +120,16 @@ fi
 #-------------------------------------------------------------------------------
 if [ -d "build" ] ; then
 
+#-------------------------------------------------------------------------------
+# 	the existing cert's fingerprint is saved 
+#-------------------------------------------------------------------------------
 	./src/check_fingerprint.sh
 
 else
+
+#-------------------------------------------------------------------------------
+# 	the program is running for the first time ; create build folder & extract cert fingerprint
+#-------------------------------------------------------------------------------
 
 	mkdir build
 	./src/initial_cert.sh
