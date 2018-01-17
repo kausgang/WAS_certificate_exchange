@@ -65,6 +65,7 @@ else
 	#backup keystore database file
 	#$JAVA_HOME/bin/keytool -importcert -trustcacerts -alias <ALIAS NAME WITH DATE STAMP> -file <EXPORTED CERT ARM FILE> -keystore <KEYSTORE FILE> -storepass <KEYSTORE PASSWORD>
 	#notify by mail
+	#update ./build/existing_cert_details with new fingerprint
 
 
 fi
